@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לוח בקרה - משלוחים אילת - אורה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 2em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        .driver-item {
+            background: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3498db;
+        }
+
+        .driver-item h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .driver-item p {
+            margin: 3px 0;
+            color: #7f8c8d;
+            font-size: 0.85em;
+        }
+
+        .driver-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .driver-item a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-primary:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            margin: 0 2px;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .order-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .order-item.assigned {
+            border-left-color: #27ae60;
+        }
+
+        .order-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-item p {
+            margin: 4px 0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .order-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .order-actions select {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .next-round {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .next-round h3 {
+            margin-bottom: 8px;
+        }
+
+        .next-round p {
+            margin: 4px 0;
+            font-size: 0.95em;
+        }
+
+        .countdown {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 8px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .alert-success {
+            background: #d5f4e6;
+            color: #0b5345;
+            border-left: 4px solid #27ae60;
+        }
+
+        .alert-error {
+            background: #fadbd8;
+            color: #78281f;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚚 משלוחים אילת - אורה</h1>
+            <p style="color: #7f8c8d;">לוח בקרה למנהל</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- עמודה שמאל - הגדרות -->
+            <div class="card">
+                <h2>⚙️ הגדרות</h2>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'drivers')">🚗 שליחים</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'settings')">⚡ הגדרות</button>
+                </div>
+
+                <!-- Drivers Tab -->
+                <div id="drivers" class="tab-content active">
+                    <div id="driversContainer"></div>
+                    <button class="btn btn-primary" onclick="addNewDriver()">➕ הוסף שליח</button>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-content">
+                    <div class="form-group">
+                        <label>שם העסק:</label>
+                        <input type="text" id="businessName" value="משלוחים אילת - אורה">
+                    </div>
+
+                    <div class="form-group">
+                        <label>שעות פעילות (סבבים) - הדר"ק בפסיקים:</label>
+                        <input type="text" id="rounds" value="19:00, 21:00, 23:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label>מחיר משלוח (ש"ח):</label>
+                        <input type="number" id="deliveryPrice" value="50" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>סגירת הזמנות (דקות לפני הסבב):</label>
+                        <input type="number" id="closingMinutes" value="45" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>מינימום הזמנות לסבב:</label>
+                        <input type="number" id="minOrders" value="2" min="1">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveSettings()">💾 שמור</button>
+                </div>
+            </div>
+
+            <!-- עמודה ימין - הזמנות -->
+            <div class="card">
+                <h2>📦 הזמנות</h2>
+
+                <div class="next-round">
+                    <h3>⏰ הסבב הבא:</h3>
+                    <p>שעה: <strong id="nextRoundTime">19:00</strong></p>
+                    <p>הזמנות: <strong id="orderCount">0</strong></p>
+                    <div class="countdown">
+                        סגירה בעוד: <span id="countdownTimer">--:--:--</span>
+                    </div>
+                    <button class="btn btn-danger" onclick="markRoundAsInvalid()" style="margin-top: 15px; width: 100%;">
+                        ❌ סבב לא תקין (אין מספיק הזמנות)
+                    </button>
+                </div>
+
+                <div id="alertContainer"></div>
+
+                <div id="ordersContainer" class="empty-state">
+                    <p>אין הזמנות עדיין</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_SETTINGS = {
+            businessName: 'משלוחים אילת - אורה',
+            rounds: ['19:00', '21:00', '23:00'],
+            deliveryPrice: 50,
+            closingMinutes: 45,
+            minOrders: 2,
+            adminPassword: '313930'
+        };
+
+        const DEFAULT_DRIVERS = [
+            {
+                id: 1,
+                name: 'משה',
+                telegram: '@Moses2401',
+                bitUrl: 'http://bit.ly/47hHYC2',
+                payboxPhone: '0532444114',
+                status: 'פעיל'
+            },
+            {
+                id: 2,
+                name: 'יולי',
+                telegram: '@djdjnf',
+                bitUrl: 'https://www.bitpay.co.il/app/me/A56F2DB9-5A0A-4431-503B-C3B5E7437531BC59',
+                payboxPhone: '0544202080',
+                status: 'פעיל'
+            }
+        ];
+
+        let drivers = loadData('drivers') || DEFAULT_DRIVERS;
+        let settings = loadData('settings') || DEFAULT_SETTINGS;
+        let orders = loadData('orders') || [];
+
+        function loadData(key) {
+            try {
+                return JSON.parse(localStorage.getItem(key));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveData(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+                return true;
+            } catch (e) {
+                showAlert('שגיאה בשמירה!', 'error');
+                return false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAdminPassword()) return;
+            renderDrivers();
+            renderOrders();
+            updateNextRound();
+            startCountdown();
+            loadSettings();
+        });
+
+        function checkAdminPassword() {
+            if (!sessionStorage.getItem('adminAuth')) {
+                const password = prompt('🔐 הכנס סיסמת מנהל:');
+                if (password !== DEFAULT_SETTINGS.adminPassword) {
+                    alert('❌ סיסמה שגויה!');
+                    return false;
+                }
+                sessionStorage.setItem('adminAuth', 'true');
+            }
+            return true;
+        }
+
+        function loadSettings() {
+            document.getElementById('businessName').value = settings.businessName;
+            document.getElementById('rounds').value = settings.rounds.join(', ');
+            document.getElementById('deliveryPrice').value = settings.deliveryPrice;
+            document.getElementById('closingMinutes').value = settings.closingMinutes;
+            document.getElementById('minOrders').value = settings.minOrders;
+        }
+
+        function renderDrivers() {
+            const container = document.getElementById('driversContainer');
+            if (drivers.length === 0) {
+                container.innerHTML = '<p class="empty-state">אין שליחים</p>';
+                return;
+            }
+
+            container.innerHTML = drivers.map(driver => `
+                <div class="driver-item">
+                    <h4>
+                        ${driver.name}
+                        <button class="btn btn-danger btn-small" onclick="deleteDriver(${driver.id})">🗑️</button>
+                    </h4>
+                    <p><strong>📱 טלגרם:</strong> ${driver.telegram}</p>
+                    <p><strong>💳 ביט:</strong> <a href="${driver.bitUrl}" target="_blank">קישור</a></p>
+                    <p><strong>📞 פייבוקס:</strong> ${driver.payboxPhone}</p>
+                </div>
+            `).join('');
+        }
+
+        function addNewDriver() {
+            const name = prompt('שם השליח:');
+            if (!name) return;
+            const telegram = prompt('טלגרם (@username):');
+            if (!telegram) return;
+            const bitUrl = prompt('קישור ביט:');
+            const payboxPhone = prompt('מספר פייבוקס:');
+
+            const newDriver = {
+                id: Math.max(...drivers.map(d => d.id), 0) + 1,
+                name,
+                telegram,
+                bitUrl: bitUrl || '',
+                payboxPhone: payboxPhone || '',
+                status: 'פעיל'
+            };
+
+            drivers.push(newDriver);
+            if (saveData('drivers', drivers)) {
+                renderDrivers();
+                showAlert(`✅ שליח ${name} התווסף!`, 'success');
+            }
+        }
+
+        function deleteDriver(id) {
+            const driver = drivers.find(d => d.id === id);
+            if (confirm(`בטוח שברצונך למחוק את ${driver.name}?`)) {
+                drivers = drivers.filter(d => d.id !== id);
+                if (saveData('drivers', drivers)) {
+                    renderDrivers();
+                    showAlert('✅ השליח הוסר!', 'success');
+                }
+            }
+        }
+
+        function saveSettings() {
+            settings.businessName = document.getElementById('businessName').value;
+            settings.rounds = document.getElementById('rounds').value.split(',').map(r => r.trim());
+            settings.deliveryPrice = parseInt(document.getElementById('deliveryPrice').value);
+            settings.closingMinutes = parseInt(document.getElementById('closingMinutes').value);
+            settings.minOrders = parseInt(document.getElementById('minOrders').value);
+
+            if (saveData('settings', settings)) {
+                showAlert('✅ הגדרות נשמרו!', 'success');
+                updateNextRound();
+            }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>אין הזמנות עדיין</p></div>';
+                document.getElementById('orderCount').textContent = '0';
+                return;
+            }
+
+            const nextRound = document.getElementById('nextRoundTime').textContent;
+            const roundOrders = orders.filter(o => o.round === nextRound);
+            document.getElementById('orderCount').textContent = roundOrders.length;
+
+            container.innerHTML = orders.map((order, idx) => `
+                <div class="order-item ${order.assignedDriver ? 'assigned' : ''}">
+                    <h4>
+                        #${idx + 1} - ${order.customerName}
+                        <button class="btn btn-danger btn-small" onclick="deleteOrder(${idx})">🗑️</button>
+                    </h4>
+                    <p><strong>📱</strong> ${order.phone}</p>
+                    <p><strong>📍</strong> ${order.address}</p>
+                    <p><strong>🛒 וולט:</strong> ${order.voltOrderNumber}</p>
+                    <p><strong>🕐 סבב:</strong> ${order.round}</p>
+                    ${order.assignedDriver ? `<p><strong>🚗 שליח:</strong> ${order.assignedDriver}</p>` : ''}
+                    
+                    <div class="order-actions">
+                        <select onchange="assignDriver(${idx}, this.value)" ${order.assignedDriver ? 'disabled' : ''}>
+                            <option value="">בחר שליח...</option>
+                            ${drivers.map(d => `<option value="${d.name}">${d.name}</option>`).join('')}
+                        </select>
+                        ${!order.assignedDriver ? `<button class="btn btn-success btn-small" onclick="assignDriver(${idx}, document.querySelector('select').value)">✓ אישור</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function assignDriver(idx, driverName) {
+            if (!driverName) {
+                showAlert('⚠️ בחר שליח!', 'error');
+                return;
+            }
+
+            orders[idx].assignedDriver = driverName;
+            if (saveData('orders', orders)) {
+                renderOrders();
+                showAlert(`✅ הוקצה ל-${driverName}!`, 'success');
+            }
+        }
+
+        function deleteOrder(idx) {
+            if (confirm('בטוח שברצונך למחוק?')) {
+                orders.splice(idx, 1);
+                if (saveData('orders', orders)) {
+                    renderOrders();
+                    showAlert('✅ ההזמנה נמחקה!', 'success');
+                }
+            }
+        }
+
+        function updateNextRound() {
+            const now = new Date();
+            const rounds = settings.rounds;
+
+            let nextRound = null;
+            for (let round of rounds) {
+                const [hours, minutes] = round.split(':').map(Number);
+                const roundTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+                if (roundTime > now) {
+                    nextRound = round;
+                    break;
+                }
+            }
+
+            if (!nextRound) {
+                nextRound = rounds[0];
+            }
+
+            document.getElementById('nextRoundTime').textContent = nextRound;
+        }
+
+        function startCountdown() {
+            setInterval(() => {
+                const now = new Date();
+                const rounds = settings.rounds;
+
+                for (let round of rounds) {
+                    const [hours, minutes] = round.split(':').map(Number);
+                    const roundTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+                    if (roundTime > now) {
+                        const closingTime = new Date(roundTime.getTime() - settings.closingMinutes * 60000);
+                        const timeLeft = closingTime - now;
+
+                        if (timeLeft > 0) {
+                            const hrs = Math.floor(timeLeft / 3600000);
+                            const mins = Math.floor((timeLeft % 3600000) / 60000);
+                            const secs = Math.floor((timeLeft % 60000) / 1000);
+                            document.getElementById('countdownTimer').textContent =
+                                `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                        } else {
+                            document.getElementById('countdownTimer').textContent = 'סגור ❌';
+                        }
+                        break;
+                    }
+                }
+
+                updateNextRound();
+            }, 1000);
+        }
+
+        function switchTab(e, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            e.target.classList.add('active');
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const alert = document.createElement('div');
+            alert.className = `alert ${alertClass}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        window.addOrder = function(orderData) {
+            orders.push({
+                ...orderData,
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            });
+            if (saveData('orders', orders)) {
+                renderOrders();
+            }
+        };
+
+        // Mark round as invalid (insufficient orders)
+        function markRoundAsInvalid() {
+            const nextRound = document.getElementById('nextRoundTime').textContent;
+            const roundOrders = orders.filter(o => o.round === nextRound);
+
+            if (roundOrders.length === 0) {
+                showAlert('⚠️ אין הזמנות בסבב זה!', 'error');
+                return;
+            }
+
+            if (confirm(`בטוח? תשדר הודעה ל-${roundOrders.length} הזמנות שאין מספיק הזמנות לסבב ${nextRound}`)) {
+                // Mark orders as invalid
+                roundOrders.forEach(order => {
+                    order.status = 'insufficient';
+                    order.insufficientRound = nextRound;
+                });
+
+                if (saveData('orders', orders)) {
+                    // Create notification links for each order
+                    const notificationLinks = roundOrders.map(order => {
+                        // Create a notification link
+                        const notificationData = {
+                            customerName: order.customerName,
+                            phone: order.phone,
+                            round: nextRound,
+                            voltOrderNumber: order.voltOrderNumber
+                        };
+                        sessionStorage.setItem('insufficientOrder_' + order.voltOrderNumber, JSON.stringify(notificationData));
+                        return {
+                            customer: order.customerName,
+                            phone: order.phone,
+                            message: `לא קיבלנו מספיק הזמנות לסבב ${nextRound}. בחר דחיה לסבב הבא או החזר כסף: insufficient_orders.html?order=${order.voltOrderNumber}`
+                        };
+                    });
+
+                    // Show notification details
+                    console.log('📱 הודעות ששודרו:', notificationLinks);
+                    showAlert(`✅ שודרה הודעה ל-${roundOrders.length} לקוחות!`, 'success');
+                    renderOrders();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

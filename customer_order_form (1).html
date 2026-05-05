@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משלוחים אילת - אורה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #999;
+            font-size: 1em;
+        }
+
+        .tagline {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .form-section input,
+        .form-section select,
+        .form-section textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-section input:focus,
+        .form-section select:focus,
+        .form-section textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .rounds-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .round-option {
+            position: relative;
+        }
+
+        .round-option input[type="radio"] {
+            display: none;
+        }
+
+        .round-option label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .round-option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .type-option {
+            position: relative;
+        }
+
+        .type-option input[type="radio"] {
+            display: none;
+        }
+
+        .type-option label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .type-option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .next-round-info {
+            background: #e6f2ff;
+            border-right: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .next-round-info p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .next-round-info strong {
+            color: #667eea;
+        }
+
+        .countdown {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #764ba2;
+            margin-top: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message h3 {
+            color: #22543d;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #22543d;
+            margin: 8px 0;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        .payment-links {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .payment-links p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .payment-btn {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .payment-btn a {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .payment-btn a:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-group {
+            background: #c6f6d5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .whatsapp-group a {
+            display: inline-block;
+            background: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+            padding: 15px;
+            border-radius: 8px;
+            color: #c53030;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .closed-message {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .closed-message.show {
+            display: block;
+        }
+
+        .closed-message h3 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .closed-message p {
+            color: #c53030;
+        }
+
+        .info-box {
+            background: #fef5e7;
+            border-right: 4px solid #f39c12;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: #7d6608;
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 600px) {
+            .rounds-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="logo">🚚</div>
+                <h1>משלוחים אילת - אורה</h1>
+                <p>משלוח בערב ובלילה</p>
+            </div>
+
+            <div class="tagline">
+                🎯 וולט לא מגיע? אני כן!
+                <br>
+                🏪 הצרכנייה נסגרה? אני בדרך אליך!
+            </div>
+
+            <div id="nextRoundInfo" class="next-round-info">
+                <p>⏰ <strong>הסבב הבא:</strong> <span id="nextRound">19:00</span></p>
+                <p>📍 <strong>מיקום:</strong> אילת ↔️ באר אורה</p>
+                <p>💰 <strong>מחיר קבוע:</strong> 50 ש"ח</p>
+                <div class="countdown">
+                    <strong>סגירת הזמנות בעוד:</strong> <span id="countdown">--:--:--</span>
+                </div>
+            </div>
+
+            <div id="closedMessage" class="closed-message">
+                <h3>❌ הסבב סגור</h3>
+                <p>סוגרים הזמנות דקה אחת. בחזור בסבב הבא!</p>
+            </div>
+
+            <form id="orderForm" style="display: none;">
+                <div class="form-section">
+                    <label>🕐 בחר סבב:</label>
+                    <div class="rounds-selector" id="roundsContainer"></div>
+                </div>
+
+                <div class="form-section">
+                    <label>👤 שמך המלא:</label>
+                    <input type="text" id="customerName" placeholder="משה כהן" required>
+                </div>
+
+                <div class="form-section">
+                    <label>📍 כתובתך בבאר אורה:</label>
+                    <input type="text" id="address" placeholder="רחוב הראל 5" required>
+                </div>
+
+                <div class="form-section">
+                    <label>📞 מספר טלפון:</label>
+                    <input type="tel" id="phone" placeholder="050-1234567" required>
+                </div>
+
+                <div class="form-section">
+                    <label>🛒 מספר ההזמנה בוולט (Wolt):</label>
+                    <input type="text" id="voltOrderNumber" placeholder="WLT-123456789" required>
+                </div>
+
+                <div class="info-box">
+                    <p>ℹ️ <strong>חשוב לדעת:</strong></p>
+                    <p>✓ המשלוח הוא מהמסעדה/חנות ועד לפתח הביתך</p>
+                    <p>✓ עלות המשלוח 50 ש"ח (לא כוללת את המוצרים)</p>
+                    <p>✓ אם אין מספיק הזמנות, הסבב ידחה לסבב הבא</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">🚀 שדר הזמנה</button>
+            </form>
+
+            <div id="successMessage" class="success-message">
+                <h3>✅ הזמנתך התקבלה!</h3>
+                <p id="successText"></p>
+
+                <div class="payment-links">
+                    <p><strong>💰 בחר דרך תשלום:</strong></p>
+                    <div class="payment-btn" id="paymentButtons"></div>
+                </div>
+
+                <div class="whatsapp-group">
+                    <p>📱 צרף לקבוצת WhatsApp שלנו לעדכונים בזמן אמת:</p>
+                    <a href="https://chat.whatsapp.com/JH7k8L9mP2Q3R4S5T6U7V8W9" target="_blank">
+                        💬 הצטרף לקבוצה
+                    </a>
+                </div>
+
+                <button class="btn btn-primary" onclick="resetForm()" style="margin-top: 20px;">
+                    ➕ הזמנה נוספת
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SETTINGS = {
+            rounds: ['19:00', '21:00', '23:00'],
+            closingMinutes: 45,
+            drivers: [
+                { name: 'משה', bitUrl: 'http://bit.ly/47hHYC2', payboxPhone: '0532444114' },
+                { name: 'יולי', bitUrl: 'https://www.bitpay.co.il/app/me/A56F2DB9-5A0A-4431-503B-C3B5E7437531BC59', payboxPhone: '0544202080' }
+            ]
+        };
+
+        let currentRound = null;
+        let roundClosingTime = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeRounds();
+            updateNextRound();
+            startCountdown();
+            document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+        });
+
+        function initializeRounds() {
+            const container = document.getElementById('roundsContainer');
+            container.innerHTML = SETTINGS.rounds.map((round, idx) => `
+                <div class="round-option">
+                    <input type="radio" id="round-${idx}" name="round" value="${round}" required>
+                    <label for="round-${idx}">
+                        <strong>${round}</strong>
+                        <br>
+                        <small id="status-${round}">זמין</small>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        function updateNextRound() {
+            const now = new Date();
+            const rounds = SETTINGS.rounds;
+
+            let nextRound = null;
+            for (let round of rounds) {
+                const [hours, minutes] = round.split(':').map(Number);
+                const roundTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+                if (roundTime > now) {
+                    nextRound = round;
+                    break;
+                }
+            }
+
+            if (!nextRound) {
+                nextRound = rounds[0];
+            }
+
+            currentRound = nextRound;
+            document.getElementById('nextRound').textContent = nextRound;
+
+            // Calculate closing time
+            const [hours, minutes] = nextRound.split(':').map(Number);
+            roundClosingTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+            roundClosingTime.setMinutes(roundClosingTime.getMinutes() - SETTINGS.closingMinutes);
+        }
+
+        function startCountdown() {
+            setInterval(() => {
+                const now = new Date();
+
+                if (roundClosingTime && now >= roundClosingTime) {
+                    // Round is closed
+                    document.getElementById('orderForm').style.display = 'none';
+                    document.getElementById('closedMessage').classList.add('show');
+                } else if (roundClosingTime) {
+                    const timeLeft = roundClosingTime - now;
+                    const hours = Math.floor(timeLeft / 3600000);
+                    const minutes = Math.floor((timeLeft % 3600000) / 60000);
+                    const seconds = Math.floor((timeLeft % 60000) / 1000);
+
+                    document.getElementById('countdown').textContent =
+                        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                    // Show form when countdown is below 1 day
+                    document.getElementById('orderForm').style.display = 'block';
+                    document.getElementById('closedMessage').classList.remove('show');
+                }
+
+                updateNextRound();
+            }, 1000);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const orderData = {
+                customerName: document.getElementById('customerName').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                type: document.querySelector('input[name="type"]:checked')?.value || 'אחר',
+                items: document.getElementById('items').value,
+                round: document.querySelector('input[name="round"]:checked').value,
+            };
+
+            // Send to admin dashboard
+            if (window.opener) {
+                window.opener.addOrder(orderData);
+            } else {
+                // Store locally
+                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push({ ...orderData, status: 'pending', timestamp: new Date().toISOString() });
+                localStorage.setItem('orders', JSON.stringify(orders));
+            }
+
+            // Show success
+            document.getElementById('orderForm').style.display = 'none';
+            const successMsg = document.getElementById('successMessage');
+            document.getElementById('successText').innerHTML = `
+                <strong>תודה ${orderData.customerName}!</strong><br>
+                הזמנתך לסבב ${orderData.round} התקבלה!<br>
+                <br>
+                <strong>🚗 מי זה יביא לך?</strong><br>
+                המנהל יבחר אחד מהשליחים שלנו ותקבל הודעה ב-WhatsApp בעוד דקה!
+            `;
+
+            // Generate payment buttons
+            const paymentButtons = document.getElementById('paymentButtons');
+            paymentButtons.innerHTML = SETTINGS.drivers.map(driver => `
+                <a href="${driver.bitUrl}" target="_blank">💰 ${driver.name}</a>
+            `).join('');
+
+            successMsg.classList.add('show');
+        }
+
+        function resetForm() {
+            document.getElementById('orderForm').reset();
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('orderForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

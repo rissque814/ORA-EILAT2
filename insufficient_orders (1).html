@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אין מספיק הזמנות</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .option-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn.delay {
+            background: #3498db;
+            color: white;
+        }
+
+        .option-btn.delay:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .option-btn.refund {
+            background: #27ae60;
+            color: white;
+        }
+
+        .option-btn.refund:hover {
+            background: #229954;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .option-btn span {
+            font-size: 1.5em;
+        }
+
+        .details {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .details p {
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #229954;
+        }
+
+        .btn-cancel {
+            background: #bdc3c7;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #95a5a6;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #22543d;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #22543d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="icon">⚠️</div>
+            <h1>אוופס!</h1>
+            <p>לא קיבלנו מספיק הזמנות לסבב הזה 😔</p>
+            <p>אבל אל תדאג, יש לך שתי אפשרויות:</p>
+
+            <div class="options">
+                <button class="option-btn delay" onclick="showConfirmModal('delay')">
+                    <span>⏰</span>
+                    <div>
+                        <strong>דחה לסבב הבא</strong>
+                        <small>ההזמנה שלך תישאר פעילה לסבב ה-21:00</small>
+                    </div>
+                </button>
+
+                <button class="option-btn refund" onclick="showConfirmModal('refund')">
+                    <span>💰</span>
+                    <div>
+                        <strong>בקש החזר כסף</strong>
+                        <small>נחזיר לך את 50 ש"ח תוך 24 שעות</small>
+                    </div>
+                </button>
+            </div>
+
+            <div class="details">
+                <p><strong>📞 צריך עזרה?</strong></p>
+                <p>צרף אותנו בוואטסאפ או התקשר: 050-XXXXXXX</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <h3>✅ התקבל!</h3>
+                <p id="successText"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn-confirm" onclick="confirmAction()">אישור</button>
+                <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedAction = null;
+        let orderData = null;
+
+        // Get order data from sessionStorage or URL
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('order');
+            
+            if (orderId) {
+                orderData = JSON.parse(sessionStorage.getItem('insufficientOrder_' + orderId) || '{}');
+            } else {
+                orderData = JSON.parse(sessionStorage.getItem('currentOrder') || '{}');
+            }
+
+            // If no order data, show error
+            if (!orderData.customerName) {
+                document.querySelector('.card').innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 3em; margin-bottom: 20px;">⚠️</div>
+                        <h1 style="color: #e74c3c; margin-bottom: 10px;">שגיאה</h1>
+                        <p style="color: #666; margin-bottom: 20px;">לא הצלחנו למצוא את פרטי ההזמנה שלך.</p>
+                        <p style="color: #999;">אנא צור קשר עם התמיכה שלנו בוואטסאפ.</p>
+                    </div>
+                `;
+            }
+        });
+
+        function showConfirmModal(action) {
+            selectedAction = action;
+            const modal = document.getElementById('confirmModal');
+
+            if (action === 'delay') {
+                document.getElementById('modalTitle').textContent = '⏰ דחה לסבב הבא?';
+                document.getElementById('modalMessage').textContent = 
+                    'ההזמנה שלך תישאר פעילה לסבב הבא (21:00). המחיר נשאר 50 ש"ח.';
+            } else {
+                document.getElementById('modalTitle').textContent = '💰 בקש החזר?';
+                document.getElementById('modalMessage').textContent = 
+                    'נחזיר לך את 50 ש"ח לחשבונך תוך 24 שעות.';
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+            selectedAction = null;
+        }
+
+        function confirmAction() {
+            closeModal();
+
+            // Save the action
+            const action = {
+                type: selectedAction,
+                customerName: orderData.customerName,
+                phone: orderData.phone,
+                round: orderData.round,
+                voltOrderNumber: orderData.voltOrderNumber,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            let actions = JSON.parse(localStorage.getItem('insufficientOrdersActions') || '[]');
+            actions.push(action);
+            localStorage.setItem('insufficientOrdersActions', JSON.stringify(actions));
+
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+
+            if (selectedAction === 'delay') {
+                successText.innerHTML = `
+                    <strong>✅ ההזמנה שלך דחויה לסבב ה-21:00</strong><br>
+                    אנחנו נעדכן אותך בוואטסאפ כשהכול מוכן!
+                `;
+            } else {
+                successText.innerHTML = `
+                    <strong>✅ בקשת ההחזר התקבלה!</strong><br>
+                    נחזיר לך את 50 ש"ח בעוד 24 שעות.<br>
+                    תודה שהשתמשת בשירות שלנו!
+                `;
+            }
+
+            successMsg.classList.add('show');
+
+            // Hide options
+            document.querySelector('.options').style.display = 'none';
+            document.querySelector('.details').style.display = 'none';
+
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.close();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
